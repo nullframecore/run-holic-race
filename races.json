@@ -1,0 +1,54 @@
+{
+  "version": "2026.02.13",
+  "updated_at": "2026-02-13",
+  "races": [
+    {
+      "id": "KR-SEOUL-2026-001",
+      "name": "서울 평화 하프마라톤",
+      "date": "2026-05-10",
+      "distance_km": 21.1,
+      "region": "서울특별시",
+      "city": "서울",
+      "country": "대한민국",
+      "organizer": "서울시 체육회",
+      "url": "https://example.com/seoul-half-2026",
+      "source": "직접 입력",
+      "status": "접수중",
+      "registration_start": "2026-02-01",
+      "registration_end": "2026-04-15",
+      "updated_at": "2026-02-13"
+    },
+    {
+      "id": "KR-GYEONGGI-2026-002",
+      "name": "수원 호수공원 10K",
+      "date": "2026-06-07",
+      "distance_km": 10,
+      "region": "경기도",
+      "city": "수원",
+      "country": "대한민국",
+      "organizer": "수원시",
+      "url": "https://example.com/suwon-10k-2026",
+      "source": "직접 입력",
+      "status": "예정",
+      "registration_start": "2026-03-10",
+      "registration_end": "2026-05-20",
+      "updated_at": "2026-02-13"
+    },
+    {
+      "id": "KR-GYEONGBUK-2026-003",
+      "name": "경주 국제 마라톤",
+      "date": "2026-10-11",
+      "distance_km": 42.195,
+      "region": "경상북도",
+      "city": "경주",
+      "country": "대한민국",
+      "organizer": "경주시",
+      "url": "https://example.com/gyeongju-marathon-2026",
+      "source": "직접 입력",
+      "status": "예정",
+      "registration_start": "2026-06-01",
+      "registration_end": "2026-09-01",
+      "updated_at": "2026-02-13"
+    }
+  ]
+}
