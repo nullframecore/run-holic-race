@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RunHolic 대회 정보</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero-inner">
+        <p class="eyebrow">RUNHOLIC RACE HUB</p>
+        <h1>한국 러닝 대회 정보</h1>
+        <p class="sub">최신 대회 정보를 빠르게 정리해두었습니다.</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="filters">
+        <label>
+          지역
+          <select id="regionFilter">
+            <option value="all">전체</option>
+          </select>
+        </label>
+        <label>
+          거리
+          <select id="distanceFilter">
+            <option value="all">전체</option>
+            <option value="5">5K</option>
+            <option value="10">10K</option>
+            <option value="21">하프</option>
+            <option value="42">풀</option>
+            <option value="other">기타</option>
+          </select>
+        </label>
+      </section>
+
+      <section>
+        <div class="meta">
+          <span id="updatedAt">업데이트: -</span>
+          <span id="version">버전: -</span>
+        </div>
+        <div id="raceList" class="grid"></div>
+        <div id="emptyState" class="empty" hidden>표시할 대회가 없습니다.</div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
