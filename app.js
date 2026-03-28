@@ -12,13 +12,19 @@ function formatDate(value) {
   return date.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" });
 }
 
+function formatKm(value) {
+  if (!Number.isFinite(value)) return "";
+  const rounded = Math.round(value * 1000) / 1000;
+  return Number.isInteger(rounded) ? String(rounded) : String(rounded).replace(/0+$/, "").replace(/\.$/, "");
+}
+
 function distanceLabel(km) {
   if (km === 0) return "기타";
-  if (km >= 41) return "풀";
-  if (km >= 20 && km < 30) return "하프";
-  if (km === 10) return "10K";
-  if (km === 5) return "5K";
-  return `${km}K`;
+  if (Math.abs(km - 42.195) < 1) return "풀";
+  if (Math.abs(km - 21.0975) < 1) return "하프";
+  if (Math.abs(km - 10) < 0.5) return "10K";
+  if (Math.abs(km - 5) < 0.5) return "5K";
+  return `${formatKm(km)}K`;
 }
 
 function normalizeDistances(race) {
@@ -80,6 +86,7 @@ function render() {
       <span class="tag">${race.status || ""}</span>
       <h3>${race.name}</h3>
       <div class="info">${formatDate(race.date)} · ${distanceSummary(race)} · ${race.region}</div>
+      <div class="info">종목: ${race.sport_label || "러닝"}</div>
       <div class="info">접수: ${registrationSummary(race)}</div>
       <div class="info">주최: ${race.organizer || "-"}</div>
       ${race.url ? `<a href="${race.url}" target="_blank" rel="noreferrer">공식 페이지</a>` : ""}
