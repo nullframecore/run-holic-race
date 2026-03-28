@@ -21,6 +21,34 @@ function distanceLabel(km) {
   return `${km}K`;
 }
 
+function normalizeDistances(race) {
+  const candidates = Array.isArray(race.distances_km) && race.distances_km.length
+    ? race.distances_km
+    : [race.distance_km];
+
+  return Array.from(
+    new Set(
+      candidates
+        .map((value) => Number(value))
+        .filter((value) => Number.isFinite(value))
+    )
+  ).sort((left, right) => right - left);
+}
+
+function distanceSummary(race) {
+  const distances = normalizeDistances(race);
+  if (!distances.length) return "거리 미정";
+  return distances.map((km) => distanceLabel(km)).join(" / ");
+}
+
+function registrationSummary(race) {
+  if (race.registration_note) return race.registration_note;
+  if (race.registration_start || race.registration_end) {
+    return `${race.registration_start || "-"} ~ ${race.registration_end || "-"}`;
+  }
+  return "추후 공지";
+}
+
 function render() {
   listEl.innerHTML = "";
   const regionValue = regionFilter.value;
@@ -28,11 +56,12 @@ function render() {
 
   const filtered = races.filter((race) => {
     const regionOk = regionValue === "all" || race.region === regionValue;
+    const distances = normalizeDistances(race);
     let distanceOk = true;
     if (distanceValue === "other") {
-      distanceOk = ![5, 10, 21, 42].includes(Math.round(race.distance_km));
+      distanceOk = distances.some((km) => ![5, 10, 21, 42].includes(Math.round(km)));
     } else if (distanceValue !== "all") {
-      distanceOk = Math.round(race.distance_km) === Number(distanceValue);
+      distanceOk = distances.some((km) => Math.round(km) === Number(distanceValue));
     }
     return regionOk && distanceOk;
   });
@@ -50,10 +79,10 @@ function render() {
     card.innerHTML = `
       <span class="tag">${race.status || ""}</span>
       <h3>${race.name}</h3>
-      <div class="info">${formatDate(race.date)} · ${distanceLabel(Math.round(race.distance_km))} · ${race.region}</div>
-      <div class="info">접수: ${race.registration_start || "-"} ~ ${race.registration_end || "-"}</div>
+      <div class="info">${formatDate(race.date)} · ${distanceSummary(race)} · ${race.region}</div>
+      <div class="info">접수: ${registrationSummary(race)}</div>
       <div class="info">주최: ${race.organizer || "-"}</div>
-      ${race.url ? `<a href="${race.url}" target="_blank" rel="noreferrer">공식 링크</a>` : ""}
+      ${race.url ? `<a href="${race.url}" target="_blank" rel="noreferrer">공식 페이지</a>` : ""}
     `;
 
     listEl.appendChild(card);
