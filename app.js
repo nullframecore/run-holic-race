@@ -12,6 +12,14 @@ function formatDate(value) {
   return date.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" });
 }
 
+function formatCompactDate(value) {
+  const date = new Date(value + "T00:00:00");
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}.${month}.${day}`;
+}
+
 function formatKm(value) {
   if (!Number.isFinite(value)) return "";
   const rounded = Math.round(value * 1000) / 1000;
@@ -55,6 +63,43 @@ function registrationSummary(race) {
   return "추후 공지";
 }
 
+function locationSummary(race) {
+  const region = (race.region || "").replace(/(특별시|광역시|특별자치도|특별자치시|도)$/u, "");
+  const city = race.city && race.city !== race.region ? race.city : "";
+  return [region, city].filter(Boolean).join(" · ") || race.region || "위치 미정";
+}
+
+function registrationStatus(race) {
+  const note = race.registration_note || "";
+  if (note.includes("추가")) return "추가 접수중";
+
+  const today = new Date();
+  const todayValue = new Date(`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}T00:00:00`);
+  const registrationStart = race.registration_start ? new Date(`${race.registration_start}T00:00:00`) : null;
+  const registrationEnd = race.registration_end ? new Date(`${race.registration_end}T23:59:59`) : null;
+
+  if (registrationStart && todayValue < registrationStart) return "접수 예정";
+  if (registrationEnd && todayValue > registrationEnd) return "접수 완료";
+  if (race.status === "접수마감") return "접수 완료";
+  if (race.status === "접수중") return "접수중";
+  if (race.status === "개최완료") return "대회 종료";
+  return "접수 예정";
+}
+
+function statusClass(status) {
+  switch (status) {
+    case "접수중":
+      return "status-open";
+    case "추가 접수중":
+      return "status-extended";
+    case "접수 완료":
+    case "대회 종료":
+      return "status-closed";
+    default:
+      return "status-upcoming";
+  }
+}
+
 function render() {
   listEl.innerHTML = "";
   const regionValue = regionFilter.value;
@@ -81,15 +126,22 @@ function render() {
   for (const race of filtered) {
     const card = document.createElement("article");
     card.className = "card";
+    const raceStatus = registrationStatus(race);
 
     card.innerHTML = `
-      <span class="tag">${race.status || ""}</span>
-      <h3>${race.name}</h3>
-      <div class="info">${formatDate(race.date)} · ${distanceSummary(race)} · ${race.region}</div>
-      <div class="info">종목: ${race.sport_label || "러닝"}</div>
-      <div class="info">접수: ${registrationSummary(race)}</div>
-      <div class="info">주최: ${race.organizer || "-"}</div>
-      ${race.url ? `<a href="${race.url}" target="_blank" rel="noreferrer">공식 페이지</a>` : ""}
+      <div class="card-topline">
+        <span class="card-date">${formatCompactDate(race.date)}</span>
+        <span class="card-distance">${distanceSummary(race)}</span>
+      </div>
+      <div class="card-main">
+        <h3>${race.name}</h3>
+        <div class="card-location">${locationSummary(race)}</div>
+      </div>
+      <div class="card-bottom">
+        <span class="tag ${statusClass(raceStatus)}">${raceStatus}</span>
+        ${race.url ? `<a href="${race.url}">공식 링크</a>` : ""}
+      </div>
+      <div class="card-sub">${registrationSummary(race)}</div>
     `;
 
     listEl.appendChild(card);
