@@ -84,26 +84,51 @@ select {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 16px;
 }
 
 .card {
   background: var(--card);
-  padding: 16px;
+  padding: 18px;
   border-radius: 16px;
   box-shadow: var(--shadow);
   border: 1px solid var(--stroke);
   display: grid;
-  gap: 8px;
+  gap: 12px;
+}
+
+.card-topline,
+.card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-date,
+.card-distance {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.card-distance {
+  color: var(--accent);
+}
+
+.card-main {
+  display: grid;
+  gap: 6px;
 }
 
 .card h3 {
   margin: 0;
   font-size: 18px;
+  line-height: 1.35;
 }
 
-.card .info {
+.card-location,
+.card-sub {
   color: var(--muted);
   font-size: 13px;
 }
@@ -117,12 +142,34 @@ select {
   border-radius: 999px;
   background: #f1e5d6;
   color: #4e3a26;
+  white-space: nowrap;
 }
 
 .card a {
   color: var(--accent);
   font-weight: 600;
   text-decoration: none;
+  white-space: nowrap;
+}
+
+.status-open {
+  background: #e5f5e8;
+  color: #23613a;
+}
+
+.status-extended {
+  background: #fff0d5;
+  color: #9a5a00;
+}
+
+.status-closed {
+  background: #ece6de;
+  color: #5f5649;
+}
+
+.status-upcoming {
+  background: #e2ecfb;
+  color: #244a82;
 }
 
 .empty {
@@ -135,5 +182,11 @@ select {
   .meta {
     flex-direction: column;
     gap: 6px;
+  }
+
+  .card-topline,
+  .card-bottom {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
